@@ -11,30 +11,26 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createPost, getDataPosts } from "../../redux/actions";
+import { AppDispatch } from "../../redux/store";
 
 function Posts() {
-  const [change, setChange] = useState(true);
-  const [posts, setPosts] = useState<any>();
+  const dispatch: AppDispatch = useDispatch();
+  const { dataPost, loading, error, isCreatePost } = useSelector(
+    (state: any) => state
+  );
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/posts/", {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        });
 
-        setPosts(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, [change]);
+  useEffect(() => {
+    dispatch(getDataPosts());
+  }, [dispatch, isCreatePost]);
+
+  const handleCreatePost = () => {
+    dispatch(createPost({ title, content }));
+  };
 
   return (
     <>
@@ -73,7 +69,7 @@ function Posts() {
             variant="contained"
             color="primary"
             fullWidth
-            //onClick={handlePost}
+            onClick={handleCreatePost}
             sx={{ marginBottom: 2 }}
           >
             Post
@@ -82,7 +78,7 @@ function Posts() {
       </Paper>
       <Container sx={{ marginTop: 4 }} maxWidth="md">
         <Grid container spacing={2}>
-          {posts?.list_post.map((post: any) => (
+          {dataPost?.list_post.map((post: any) => (
             <Grid item key={post.id} xs={12}>
               <Paper elevation={3} sx={{ padding: 2, borderRadius: 2 }}>
                 <Card>

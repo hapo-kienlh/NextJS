@@ -1,37 +1,69 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
-import { Avatar, Box, Button } from "@mui/material";
+import { Avatar, Box, Button, Container, Input } from "@mui/material";
+import { AppDispatch } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { getDataUser, uploadImage } from "../../redux/actions";
 
 function Me() {
-  const [user, setUser] = useState<any>();
+  const dispatch: AppDispatch = useDispatch();
+  const { dataUser, isUploadImage, loading, error } = useSelector(
+    (state: any) => state
+  );
+  const [previewImage, setPreviewImage] = useState<any>();
+  const fileInputRef = useRef<any>(null);
+  const [file, setFile] = useState<any>();
+
+  useEffect(() => {
+    fileInputRef.current = document.getElementById("fileInput");
+    dispatch(getDataUser());
+  }, [dispatch, isUploadImage]);
+
+  useEffect(() => {
+    deleteImagePreview();
+  }, [dataUser]);
+
+  const handleChangeFile = (event: any) => {
+    try {
+      const fileImage = event.target.files[0];
+
+      if (fileImage) {
+        setFile(fileImage);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImage(reader.result);
+        };
+        reader.readAsDataURL(fileImage);
+      }
+    } catch (error) {
+      console.error("Error uploading CSV file:", error);
+    }
+  };
+
+  const handleUploadAvatar = () => {
+    dispatch(uploadImage(file));
+  };
+
+  const deleteImagePreview = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    setFile("");
+    setPreviewImage(null);
+  };
+
   const handleAvatarClick = () => {
     alert("Upload avatar");
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/users/detail`, {
-          headers: {
-            token: localStorage.getItem("token"),
-            "Content-Type": "application/json",
-          },
-        });
-        const { user } = response.data;
-        setUser(user);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   return (
     <>
-      {user && (
+      {dataUser && (
         <Card sx={{ textAlign: "center" }}>
           <CardHeader
             title={
@@ -49,24 +81,56 @@ function Me() {
               }}
             >
               <Avatar
-                src={user.avatar}
+                src={dataUser.user.avatar}
                 style={{ width: 100, height: 100, marginBottom: 10 }}
                 onClick={handleAvatarClick}
                 sx={{ cursor: "pointer" }}
               />
               <Typography variant="body1" color="textPrimary">
-                Username: <strong> {user.username}</strong>
+                Username: <strong> {dataUser.user.username}</strong>
               </Typography>
               <Typography variant="body1" color="textPrimary">
-                Email: <strong>{user.email}</strong>
+                Email: <strong>{dataUser.user.email}</strong>
               </Typography>
               <Typography variant="body1" color="textPrimary">
-                Posts: <strong>{user.posts.length}</strong>
+                Posts: <strong>{dataUser.user.posts.length}</strong>
               </Typography>
             </Box>
           </CardContent>
         </Card>
       )}
+      <Container sx={{ paddingTop: 4 }}>
+        <Typography sx={{ textAlign: "center" }} variant="h5" color="initial">
+          Upload Avatar
+        </Typography>
+        <Box
+          sx={{ "& > :not(style)": { m: 3, width: "20%", marginLeft: "40%" } }}
+        >
+          <Box>
+            <Input type="file" onChange={handleChangeFile} id="fileInput" />
+          </Box>
+          {previewImage && (
+            <Box>
+              <img
+                onClick={deleteImagePreview}
+                src={previewImage}
+                alt="Preview"
+                style={{ maxWidth: "100%", maxHeight: "200px" }}
+              />
+            </Box>
+          )}
+          <Box>
+            <Button
+              onClick={handleUploadAvatar}
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              Register
+            </Button>
+          </Box>
+        </Box>
+      </Container>
     </>
   );
 }
