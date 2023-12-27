@@ -73,3 +73,22 @@ export const uploadImage = createAsyncThunk(
     return response.data;
   }
 );
+
+export const postComment = createAsyncThunk<
+  any,
+  { id: number; comment: string }
+>("api/createComment", async ({ id, comment }, { rejectWithValue }) => {
+  try {
+    const config: AxiosRequestConfig = generateAxiosConfig();
+    const postData = { postId: id, content: comment };
+    const response = await axios.post<any>(
+      "http://localhost:3000/comments/create",
+      postData,
+      config
+    );
+
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data);
+  }
+});

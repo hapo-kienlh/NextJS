@@ -81,19 +81,19 @@ function Me() {
               }}
             >
               <Avatar
-                src={dataUser.user.avatar}
+                src={dataUser.user?.avatar}
                 style={{ width: 100, height: 100, marginBottom: 10 }}
                 onClick={handleAvatarClick}
                 sx={{ cursor: "pointer" }}
               />
               <Typography variant="body1" color="textPrimary">
-                Username: <strong> {dataUser.user.username}</strong>
+                Username: <strong> {dataUser.user?.username}</strong>
               </Typography>
               <Typography variant="body1" color="textPrimary">
-                Email: <strong>{dataUser.user.email}</strong>
+                Email: <strong>{dataUser.user?.email}</strong>
               </Typography>
               <Typography variant="body1" color="textPrimary">
-                Posts: <strong>{dataUser.user.posts.length}</strong>
+                Posts: <strong>{dataUser.user?.posts.length}</strong>
               </Typography>
             </Box>
           </CardContent>
