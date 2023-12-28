@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createPost, getDataPosts, getDataUser, uploadImage } from "./actions";
+import { createPost, getDataPosts, getDataUser, postComment, uploadImage } from "./actions";
 
 interface ApiState {
   dataPost: null | any;
@@ -8,6 +8,7 @@ interface ApiState {
   isCreatePost: null;
   dataUser: null;
   isUploadImage: null;
+  isComment: null;
 }
 
 const initialState: ApiState = {
@@ -17,6 +18,7 @@ const initialState: ApiState = {
   error: null,
   dataUser: null,
   isUploadImage: null,
+  isComment: null,
 };
 
 const apiSlice = createSlice({
@@ -77,6 +79,20 @@ const apiSlice = createSlice({
         state.isUploadImage = action.payload;
       })
       .addCase(uploadImage.rejected, (state: any, action: any) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
+      /* User Comment */
+      .addCase(postComment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(postComment.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.isComment = action.payload;
+      })
+      .addCase(postComment.rejected, (state: any, action: any) => {
         state.loading = false;
         state.error = action.error.message;
       });

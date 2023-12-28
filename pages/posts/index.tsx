@@ -6,30 +6,41 @@ import {
   CardContent,
   CardHeader,
   Container,
+  Divider,
   Grid,
+  List,
+  ListItem,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost, getDataPosts } from "../../redux/actions";
+import { createPost, getDataPosts, postComment } from "../../redux/actions";
 import { AppDispatch } from "../../redux/store";
 
 function Posts() {
   const dispatch: AppDispatch = useDispatch();
-  const { dataPost, loading, error, isCreatePost } = useSelector(
+  const { dataPost, loading, error, isCreatePost, isComment } = useSelector(
     (state: any) => state
   );
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     dispatch(getDataPosts());
-  }, [dispatch, isCreatePost]);
+  }, [dispatch, isCreatePost, isComment]);
 
   const handleCreatePost = () => {
+    setContent("");
+    setTitle("");
     dispatch(createPost({ title, content }));
+  };
+
+  const handlePostComment = (id: any) => {
+    setComment("");
+    dispatch(postComment({ id, comment }));
   };
 
   return (
@@ -84,7 +95,11 @@ function Posts() {
                 <Card>
                   <CardHeader
                     avatar={
-                      <Avatar src={post.user.avatar} alt={post.user.username} />
+                      <Avatar
+                        src={post.user.avatar}
+                        alt={post.user.username}
+                        sx={{ width: 75, height: 75 }}
+                      />
                     }
                     title={post.user.username}
                   />
@@ -97,6 +112,46 @@ function Posts() {
                     </Typography>
                   </CardContent>
                 </Card>
+                <Box sx={{ marginTop: 2 }}>
+                  <List>
+                    {post.comments.map((item: any, index: number) => (
+                      <React.Fragment key={item.id}>
+                        <ListItem>
+                          <Avatar
+                            src={item.user.avatar}
+                            alt={item.user.username}
+                            sx={{ marginRight: 1 }}
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            <strong>{item.user.username}</strong>:{" "}
+                            {item.content}
+                          </Typography>
+                        </ListItem>
+                        {index < post.comments.length - 1 && <Divider />}
+                      </React.Fragment>
+                    ))}
+                  </List>
+                </Box>
+                <Box sx={{ marginTop: 5 }}>
+                  <TextField
+                    label="Comment"
+                    variant="outlined"
+                    fullWidth
+                    sx={{
+                      marginBottom: 1,
+                      "& .MuiOutlinedInput-root": { borderRadius: 0 },
+                    }}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ marginTop: 1 }}
+                    onClick={() => handlePostComment(post.id)}
+                  >
+                    Comment
+                  </Button>
+                </Box>
               </Paper>
             </Grid>
           ))}
