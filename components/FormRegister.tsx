@@ -34,6 +34,9 @@ function FormRegister(props: any) {
       );
       const { status } = response.data;
       if (status === 200) {
+        setUsername("");
+        setPassword("");
+        setEmail("");
         setRegiterSuccessSuccess(true);
       } else {
         setRegiterSuccessSuccess(false);
@@ -65,6 +68,7 @@ function FormRegister(props: any) {
                 variant="outlined"
                 fullWidth
                 onChange={(e) => setUsername(e.target.value)}
+                value={username}
               />
             </Box>
             <Box>
@@ -74,6 +78,7 @@ function FormRegister(props: any) {
                 variant="outlined"
                 fullWidth
                 onChange={(e) => setPassword(e.target.value)}
+                value={password}
               />
             </Box>
             <Box>
@@ -83,6 +88,7 @@ function FormRegister(props: any) {
                 variant="outlined"
                 fullWidth
                 onChange={(e) => setEmail(e.target.value)}
+                value={email}
               />
             </Box>
             <Box>
