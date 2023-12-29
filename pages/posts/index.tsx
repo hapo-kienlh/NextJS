@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPost, getDataPosts, postComment } from "../../redux/actions";
 import { AppDispatch } from "../../redux/store";
 import BackgroundSwitch from "../../components/Toggle";
+import IconButtonWithPopover from "../../components/IconButtonWithPopover";
 
 function Posts() {
   const dispatch: AppDispatch = useDispatch();
@@ -50,7 +51,7 @@ function Posts() {
   return (
     <>
       <Box>
-        <Paper
+        {/* <Paper
           elevation={3}
           sx={{ padding: 2, borderRadius: 2, width: "30%", marginLeft: "35%" }}
         >
@@ -91,7 +92,7 @@ function Posts() {
               Post
             </Button>
           </Box>
-        </Paper>
+        </Paper> */}
         <Container sx={{ marginTop: 4 }} maxWidth="md">
           <Grid container spacing={2}>
             {dataPost?.list_post.map((post: any) => (
@@ -115,6 +116,10 @@ function Posts() {
                       <Typography variant="body2" color="text.secondary">
                         {post.content}
                       </Typography>
+                      <IconButtonWithPopover
+                        postId={post.id}
+                        reactions={post.reactions}
+                      />
                     </CardContent>
                   </Card>
                   <Box sx={{ marginTop: 2 }}>
