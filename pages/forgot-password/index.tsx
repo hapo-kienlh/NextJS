@@ -12,62 +12,49 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import SendmailModal from "../../components/SendmailModel";
+import { AppDispatch } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getDataUser, sendMail } from "../../redux/actions";
+import { clearSendMailState } from "../../redux/reducers";
 
 function ForgotPassword() {
+  const dispatch: AppDispatch = useDispatch();
+  const { dataUser, isSendMail } = useSelector((state: any) => state);
+
   const [isSending, setIsSending] = useState(false);
   const [id, setId] = useState();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [sendmailSuccess, setSendmailSuccess] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
   const handleCloseModal = () => {
     setModalOpen(false);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/users/detail`, {
-          headers: {
-            token: localStorage.getItem("token"),
-            "Content-Type": "application/json",
-          },
-        });
-        const { id } = response.data.user;
-        setId(id);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
+    const id = dataUser?.user.id;
+    setId(id);
+  }, [dataUser]);
+
+  useEffect(() => {
+    dispatch(getDataUser());
   }, []);
 
-  const handleForgotPassword = async () => {
-    try {
-      setIsSending(true);
-      const response = await axios.post(
-        "http://localhost:3000/users/send-email",
-        {
-          id,
-        },
-        {
-          headers: {
-            token: localStorage.getItem("token"),
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const { status } = response.data;
-      if (status === 200) {
-        setIsSending(false);
-        setSendmailSuccess(true);
-      }
-      setModalOpen(true);
-    } catch (error) {
-      setSendmailSuccess(false);
-      setModalOpen(true);
+  useEffect(() => {
+    if (isSendMail) {
+      setIsPending(false);
       setIsSending(false);
+      setSendmailSuccess(true);
+      setModalOpen(true);
+      dispatch(clearSendMailState());
     }
+  }, [isSendMail]);
+
+  const handleForgotPassword = async () => {
+    setIsPending(true);
+    dispatch(sendMail({ id: id }));
   };
   return (
     <>
@@ -93,7 +80,7 @@ function ForgotPassword() {
           onClick={handleForgotPassword}
           disabled={isSending}
         >
-          {isSending ? <CircularProgress size={25} color="inherit" /> : "Send"}
+          {isPending ? <CircularProgress size={25} color="inherit" /> : "Send"}
         </Button>
       </Box>
 

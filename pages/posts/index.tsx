@@ -51,7 +51,7 @@ function Posts() {
   return (
     <>
       <Box>
-        {/* <Paper
+        <Paper
           elevation={3}
           sx={{ padding: 2, borderRadius: 2, width: "30%", marginLeft: "35%" }}
         >
@@ -92,7 +92,7 @@ function Posts() {
               Post
             </Button>
           </Box>
-        </Paper> */}
+        </Paper>
         <Container sx={{ marginTop: 4 }} maxWidth="md">
           <Grid container spacing={2}>
             {dataPost?.list_post.map((post: any) => (

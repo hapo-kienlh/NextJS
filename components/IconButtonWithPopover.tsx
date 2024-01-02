@@ -3,16 +3,12 @@ import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
 import IconList from "./IconList";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
-import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
-import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
-import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import axios from "axios";
 import { getDataPosts } from "../redux/actions";
 import { AppDispatch } from "../redux/store";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { icons } from "../config";
 
 const IconButtonWithPopover = (props: any) => {
   const dispatch: AppDispatch = useDispatch();
@@ -35,7 +31,7 @@ const IconButtonWithPopover = (props: any) => {
 
   const handleIconClick = async (selectedIcon: any) => {
     const reactionType = icons.indexOf(selectedIcon);
-
+    // dispatch(reactionPost({ postId: postId, type: reactionType }));
     try {
       const response = await axios.get(
         `http://localhost:3000/posts/reaction/${postId}/${reactionType}`,
@@ -56,26 +52,16 @@ const IconButtonWithPopover = (props: any) => {
     handleClose();
   };
 
-  const icons = [
-    <ThumbUpIcon />,
-    <ThumbDownAltIcon />,
-    <SentimentSatisfiedAltIcon />,
-    <SentimentVeryDissatisfiedIcon />,
-  ];
-
-  const reactionInfo = ["blue", "#8B4513", "#FFD700", "#FF0000"];
-
   return (
     <>
-      <Box>
-        {reactions.map((reaction: any) => (
-          <small
-            style={{ color: reactionInfo[reaction.type] }}
-            key={reaction.id}
-          >
-            {icons[reaction.type]}
-          </small>
-        ))}
+      <Box sx={{ padding: 1 }}>
+        <Grid container spacing={1}>
+          {reactions.map((reaction: any) => (
+            <Grid item key={reaction.id}>
+              <small style={{ fontSize: "20px" }}>{icons[reaction.type]}</small>
+            </Grid>
+          ))}
+        </Grid>
       </Box>
       <IconButton onClick={handleClick}>
         <ThumbUpIcon />
