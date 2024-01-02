@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPost, getDataPosts, postComment } from "../../redux/actions";
 import { AppDispatch } from "../../redux/store";
 import BackgroundSwitch from "../../components/Toggle";
+import IconButtonWithPopover from "../../components/IconButtonWithPopover";
 
 function Posts() {
   const dispatch: AppDispatch = useDispatch();
@@ -115,6 +116,10 @@ function Posts() {
                       <Typography variant="body2" color="text.secondary">
                         {post.content}
                       </Typography>
+                      <IconButtonWithPopover
+                        postId={post.id}
+                        reactions={post.reactions}
+                      />
                     </CardContent>
                   </Card>
                   <Box sx={{ marginTop: 2 }}>
