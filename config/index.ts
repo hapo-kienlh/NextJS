@@ -15,4 +15,23 @@ export const generateAxiosConfig = () => {
   };
 };
 
+export const getFormattedTime = (time: any) => {
+  const postTime = new Date(time).getTime();
+  const currentTime = new Date().getTime();
+  const timeDifference = currentTime - postTime;
+  const minutesAgo = Math.floor(timeDifference / (1000 * 60));
 
+  if (minutesAgo < 1) {
+    return "just now";
+  } else if (minutesAgo < 60) {
+    return `${minutesAgo} minute${minutesAgo === 1 ? "" : "s"} ago`;
+  } else if (minutesAgo < 24 * 60) {
+    const hoursAgo = Math.floor(minutesAgo / 60);
+    return `${hoursAgo} hour${hoursAgo === 1 ? "" : "s"} ago`;
+  } else if (minutesAgo < 24 * 60 * 2) {
+    return "Yesterday";
+  } else {
+    const daysAgo = Math.floor(minutesAgo / (24 * 60));
+    return `${daysAgo} day${daysAgo === 1 ? "" : "s"} ago`;
+  }
+};

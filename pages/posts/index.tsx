@@ -20,6 +20,7 @@ import { createPost, getDataPosts, postComment } from "../../redux/actions";
 import { AppDispatch } from "../../redux/store";
 import BackgroundSwitch from "../../components/Toggle";
 import IconButtonWithPopover from "../../components/IconButtonWithPopover";
+import { getFormattedTime } from "../../config";
 
 function Posts() {
   const dispatch: AppDispatch = useDispatch();
@@ -47,6 +48,8 @@ function Posts() {
   const handlePostComment = (id: any) => {
     dispatch(postComment({ id, comment }));
   };
+
+  console.log(dataPost?.list_post)
 
   return (
     <>
@@ -107,34 +110,73 @@ function Posts() {
                           sx={{ width: 75, height: 75 }}
                         />
                       }
-                      title={post.user.username}
+                      title={
+                        <Box>
+                          <Typography
+                            sx={{ fontWeight: "bold", color: "black" }}
+                          >
+                            {post.user.username}
+                          </Typography>
+                          <small>{getFormattedTime(post.time)}</small>
+                        </Box>
+                      }
                     />
                     <CardContent>
-                      <Typography variant="h5" component="div">
-                        {post.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {post.content}
-                      </Typography>
-                      <IconButtonWithPopover
-                        postId={post.id}
-                        reactions={post.reactions}
-                      />
+                      <Box>
+                        <Typography variant="h6">{post.title}</Typography>
+                        <Box
+                          sx={{
+                            paddingBottom: 3,
+                            paddingTop: 3,
+                          }}
+                        >
+                          <Typography variant="body2" color="text.secondary">
+                            {post.content}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box>
+                        <IconButtonWithPopover
+                          postId={post.id}
+                          reactions={post.reactions}
+                        />
+                      </Box>
                     </CardContent>
                   </Card>
                   <Box sx={{ marginTop: 2 }}>
                     <List>
-                      {post.comments?.map((item: any, index: number) => (
-                        <React.Fragment key={item.id}>
+                      {post.comments?.map((commnent: any, index: number) => (
+                        <React.Fragment key={commnent.id}>
                           <ListItem>
                             <Avatar
-                              src={item.user.avatar}
-                              alt={item.user.username}
+                              src={commnent.user.avatar}
+                              alt={commnent.user.username}
                               sx={{ marginRight: 1 }}
                             />
-                            <Typography variant="body2" color="text.secondary">
-                              <strong>{item.user.username}</strong>:{" "}
-                              {item.content}
+                            <Typography
+                              sx={{ paddingBottom: 2, paddingTop: 2 }}
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              <strong>{commnent.user.username} : </strong>
+                              <span
+                                style={{
+                                  color: "#111111",
+                                  borderRadius: "10px",
+                                  padding: 12,
+                                  backgroundColor: "lightgray",
+                                }}
+                              >
+                                {commnent.content}
+                              </span>
+                              <small
+                                style={{
+                                  display: "float",
+                                  marginLeft: "10px",
+                                }}
+                              >
+                                ({getFormattedTime(commnent.time)})
+                              </small>
                             </Typography>
                           </ListItem>
                           {index < post.comments.length - 1 && <Divider />}
