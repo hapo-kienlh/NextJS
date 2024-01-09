@@ -130,5 +130,3 @@ export const sendMail = createAsyncThunk<any, { id: any; }>(
     }
   }
 );
-
-

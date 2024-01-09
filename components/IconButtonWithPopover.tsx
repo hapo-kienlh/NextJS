@@ -3,21 +3,23 @@ import IconButton from "@mui/material/IconButton";
 import Popover from "@mui/material/Popover";
 import IconList from "./IconList";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Tooltip } from "@mui/material";
 import axios from "axios";
 import { getDataPosts } from "../redux/actions";
 import { AppDispatch } from "../redux/store";
 import { useDispatch } from "react-redux";
-import { icons } from "../config";
+import { icons, setCountReactions } from "../config";
 
 const IconButtonWithPopover = (props: any) => {
   const dispatch: AppDispatch = useDispatch();
 
-  const { reactions, postId } = props;
+  const { reactions, reactionsCount, postId } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   const [change, setChange] = useState(false);
+  const [uniqueTypes, setUniqueTypes] = useState<any>();
 
   useEffect(() => {
+    setUniqueTypes(setCountReactions(reactions));
     dispatch(getDataPosts());
   }, [change]);
 
@@ -31,7 +33,6 @@ const IconButtonWithPopover = (props: any) => {
 
   const handleIconClick = async (selectedIcon: any) => {
     const reactionType = icons.indexOf(selectedIcon);
-    // dispatch(reactionPost({ postId: postId, type: reactionType }));
     try {
       const response = await axios.get(
         `http://localhost:3000/posts/reaction/${postId}/${reactionType}`,
@@ -56,9 +57,17 @@ const IconButtonWithPopover = (props: any) => {
     <>
       <Box sx={{ padding: 1 }}>
         <Grid container spacing={1}>
-          {reactions.map((reaction: any) => (
+          {uniqueTypes?.map((reaction: any) => (
             <Grid item key={reaction.id}>
-              <small style={{ fontSize: "20px" }}>{icons[reaction.type]}</small>
+              <Tooltip
+                title={reactionsCount[reaction.type]}
+                arrow
+                placement="top"
+              >
+                <small style={{ fontSize: "20px", cursor: "pointer" }}>
+                  {icons[reaction.type]}
+                </small>
+              </Tooltip>
             </Grid>
           ))}
         </Grid>

@@ -35,3 +35,12 @@ export const getFormattedTime = (time: any) => {
     return `${daysAgo} day${daysAgo === 1 ? "" : "s"} ago`;
   }
 };
+
+export const setCountReactions = (reactions: any) => {
+  const uniqueTypes = reactions?.filter(
+    (value: any, index: any, self: any) =>
+      self.findIndex((item: any) => item.type === value.type) === index
+  );
+
+  return uniqueTypes;
+};

@@ -49,8 +49,6 @@ function Posts() {
     dispatch(postComment({ id, comment }));
   };
 
-  console.log(dataPost?.list_post)
-
   return (
     <>
       <Box>
@@ -139,6 +137,7 @@ function Posts() {
                         <IconButtonWithPopover
                           postId={post.id}
                           reactions={post.reactions}
+                          reactionsCount={post.reactionsCount}
                         />
                       </Box>
                     </CardContent>
