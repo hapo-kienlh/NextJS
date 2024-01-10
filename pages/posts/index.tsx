@@ -18,13 +18,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createPost, getDataPosts, postComment } from "../../redux/actions";
 import { AppDispatch } from "../../redux/store";
-import BackgroundSwitch from "../../components/Toggle";
 import IconButtonWithPopover from "../../components/IconButtonWithPopover";
 import { getFormattedTime } from "../../config";
+import Head from "next/head";
 
 function Posts() {
   const dispatch: AppDispatch = useDispatch();
-  const { dataPost, loading, error, isCreatePost, isComment } = useSelector(
+  const { dataPost, isCreatePost, isComment } = useSelector(
     (state: any) => state
   );
   const [title, setTitle] = useState("");
@@ -51,6 +51,9 @@ function Posts() {
 
   return (
     <>
+      <Head>
+        <title>Post</title>
+      </Head>
       <Box>
         <Paper
           elevation={3}
@@ -213,5 +216,4 @@ function Posts() {
     </>
   );
 }
-
 export default Posts;

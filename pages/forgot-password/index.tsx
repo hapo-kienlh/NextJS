@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { getDataUser, sendMail } from "../../redux/actions";
 import { clearSendMailState } from "../../redux/reducers";
+import Head from "next/head";
 
 function ForgotPassword() {
   const dispatch: AppDispatch = useDispatch();
@@ -58,6 +59,9 @@ function ForgotPassword() {
   };
   return (
     <>
+      <Head>
+        <title>Forgot Password</title>
+      </Head>
       <Box
         sx={{
           display: "flex",

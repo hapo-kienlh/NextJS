@@ -9,6 +9,7 @@ import { AppDispatch } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { getDataUser, uploadImage } from "../../redux/actions";
+import Head from "next/head";
 
 function Me() {
   const dispatch: AppDispatch = useDispatch();
@@ -63,6 +64,9 @@ function Me() {
 
   return (
     <>
+      <Head>
+        <title>Profile</title>
+      </Head>
       <Box>
         {dataUser && (
           <Card
@@ -142,7 +146,7 @@ function Me() {
                     color="primary"
                     fullWidth
                   >
-                    Register
+                    Up Load
                   </Button>
                 </Box>
               </Box>

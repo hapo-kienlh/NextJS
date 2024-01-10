@@ -19,9 +19,12 @@ const IconButtonWithPopover = (props: any) => {
   const [uniqueTypes, setUniqueTypes] = useState<any>();
 
   useEffect(() => {
-    setUniqueTypes(setCountReactions(reactions));
     dispatch(getDataPosts());
   }, [change]);
+
+  useEffect(() => {
+    setUniqueTypes(setCountReactions(reactions));
+  }, [reactionsCount]);
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
