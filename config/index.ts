@@ -44,3 +44,17 @@ export const setCountReactions = (reactions: any) => {
 
   return uniqueTypes;
 };
+
+export const isFriend = (idToFind: any, listFriend: any) => {
+  if (listFriend) {
+    const foundFriend = listFriend.find(
+      (friend: { friend: { id: any } }) => friend.friend.id === idToFind
+    );
+
+    if (foundFriend) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+};

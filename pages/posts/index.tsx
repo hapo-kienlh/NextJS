@@ -16,15 +16,21 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost, getDataPosts, postComment } from "../../redux/actions";
+import {
+  createPost,
+  getDataPosts,
+  getDataUser,
+  postComment,
+} from "../../redux/actions";
 import { AppDispatch } from "../../redux/store";
 import IconButtonWithPopover from "../../components/IconButtonWithPopover";
-import { getFormattedTime } from "../../config";
+import { getFormattedTime, isFriend } from "../../config";
 import Head from "next/head";
+import PeopleIcon from "@mui/icons-material/People";
 
 function Posts() {
   const dispatch: AppDispatch = useDispatch();
-  const { dataPost, isCreatePost, isComment } = useSelector(
+  const { dataPost, isCreatePost, isComment, dataUser } = useSelector(
     (state: any) => state
   );
   const [title, setTitle] = useState("");
@@ -38,6 +44,10 @@ function Posts() {
   }, [isCreatePost, isComment]);
 
   useEffect(() => {
+    dispatch(getDataUser());
+  }, []);
+
+  useEffect(() => {
     dispatch(getDataPosts());
   }, [dispatch, isCreatePost, isComment]);
 
@@ -48,6 +58,8 @@ function Posts() {
   const handlePostComment = (id: any) => {
     dispatch(postComment({ id, comment }));
   };
+
+  console.log(dataUser)
 
   return (
     <>
@@ -160,13 +172,37 @@ function Posts() {
                               variant="body2"
                               color="text.secondary"
                             >
-                              <strong>{commnent.user.username} : </strong>
+                              <strong>
+                                {commnent.user.username}
+                                {/* <small>
+                                  {isFriend(
+                                    commnent.user.id,
+                                    dataUser?.friends
+                                  ) && (
+                                    <div
+                                      style={{
+                                        display: "inline-block",
+                                        position: "relative",
+                                        top: 4,
+                                        left: 3,
+                                      }}
+                                    >
+                                      <PeopleIcon
+                                        fontSize="small"
+                                        style={{ color: "#1877F2" }}
+                                      />
+                                    </div>
+                                  )}
+                                </small> */}
+                              </strong>
+
                               <span
                                 style={{
                                   color: "#111111",
                                   borderRadius: "10px",
                                   padding: 12,
                                   backgroundColor: "lightgray",
+                                  marginLeft: "20px",
                                 }}
                               >
                                 {commnent.content}

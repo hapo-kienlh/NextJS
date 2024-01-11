@@ -37,6 +37,22 @@ export const createPost = createAsyncThunk<any, { title: any; content: any }>(
   }
 );
 
+export const getDataUsers = createAsyncThunk<any>(
+  "api/fetchUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const config: AxiosRequestConfig = generateAxiosConfig();
+      const response = await axios.get<any[]>(
+        "http://localhost:3000/users",
+        config
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 export const getDataUser = createAsyncThunk<any>(
   "api/fetchDetailUser",
   async (_, { rejectWithValue }) => {

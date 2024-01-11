@@ -3,6 +3,7 @@ import {
   createPost,
   getDataPosts,
   getDataUser,
+  getDataUsers,
   postComment,
   reactionPost,
   sendMail,
@@ -15,6 +16,7 @@ interface ApiState {
   error: null | string;
   isCreatePost: null;
   dataUser: null;
+  dataUsers: null;
   isUploadImage: null;
   isComment: null;
   isReaction: null;
@@ -27,6 +29,7 @@ const initialState: ApiState = {
   loading: false,
   error: null,
   dataUser: null,
+  dataUsers: null,
   isUploadImage: null,
   isComment: null,
   isReaction: null,
@@ -81,6 +84,20 @@ const apiSlice = createSlice({
         state.dataUser = action.payload;
       })
       .addCase(getDataUser.rejected, (state: any, action: any) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
+      /* Get All User */
+      .addCase(getDataUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getDataUsers.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.dataUsers = action.payload;
+      })
+      .addCase(getDataUsers.rejected, (state: any, action: any) => {
         state.loading = false;
         state.error = action.error.message;
       })
