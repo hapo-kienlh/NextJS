@@ -17,7 +17,7 @@ function Login() {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/user/login",
+        "https://social-media-65nx.onrender.com/auth/user/login",
         {
           username,
           password,

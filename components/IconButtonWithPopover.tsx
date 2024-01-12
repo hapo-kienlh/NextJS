@@ -38,7 +38,7 @@ const IconButtonWithPopover = (props: any) => {
     const reactionType = icons.indexOf(selectedIcon);
     try {
       const response = await axios.get(
-        `http://localhost:3000/posts/reaction/${postId}/${reactionType}`,
+        `https://social-media-65nx.onrender.com/posts/reaction/${postId}/${reactionType}`,
         {
           headers: {
             token: localStorage.getItem("token"),

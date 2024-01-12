@@ -83,7 +83,7 @@ function Me() {
   const handleConfirmAddFriend = async (idFriendConfirm: any) => {
     const postData = { idFriendConfirm };
     const response = await axios.post(
-      "http://localhost:3000/users/confirm/add-friend",
+      "https://social-media-65nx.onrender.com/users/confirm/add-friend",
       postData,
       {
         headers: {

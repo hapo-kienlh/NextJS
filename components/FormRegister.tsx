@@ -19,7 +19,7 @@ function FormRegister(props: any) {
   const handleRegister = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/users/create",
+        "https://social-media-65nx.onrender.com/users/create",
         {
           username,
           password,

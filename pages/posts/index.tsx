@@ -59,8 +59,6 @@ function Posts() {
     dispatch(postComment({ id, comment }));
   };
 
-  console.log(dataUser)
-
   return (
     <>
       <Head>

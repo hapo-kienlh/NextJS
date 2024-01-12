@@ -8,7 +8,7 @@ export const getDataPosts = createAsyncThunk<any>(
     try {
       const config: AxiosRequestConfig = generateAxiosConfig();
       const response = await axios.get<any[]>(
-        "http://localhost:3000/posts/",
+        "https://social-media-65nx.onrender.com/posts/",
         config
       );
       return response.data;
@@ -25,7 +25,7 @@ export const createPost = createAsyncThunk<any, { title: any; content: any }>(
       const config: AxiosRequestConfig = generateAxiosConfig();
       const postData = { title, content };
       const response = await axios.post<any>(
-        "http://localhost:3000/posts/create",
+        "https://social-media-65nx.onrender.com/posts/create",
         postData,
         config
       );
@@ -43,7 +43,7 @@ export const getDataUsers = createAsyncThunk<any>(
     try {
       const config: AxiosRequestConfig = generateAxiosConfig();
       const response = await axios.get<any[]>(
-        "http://localhost:3000/users",
+        "https://social-media-65nx.onrender.com/users",
         config
       );
       return response.data;
@@ -59,7 +59,7 @@ export const getDataUser = createAsyncThunk<any>(
     try {
       const config: AxiosRequestConfig = generateAxiosConfig();
       const response = await axios.get<any[]>(
-        "http://localhost:3000/users/detail",
+        "https://social-media-65nx.onrender.com/users/detail",
         config
       );
       return response.data;
@@ -76,7 +76,7 @@ export const uploadImage = createAsyncThunk(
     formData.append("file", file);
 
     const response = await axios.post(
-      "http://localhost:3000/users/upload-image",
+      "https://social-media-65nx.onrender.com/users/upload-image",
       formData,
       {
         headers: {
@@ -97,7 +97,7 @@ export const postComment = createAsyncThunk<any, { id: any; comment: any }>(
       const config: AxiosRequestConfig = generateAxiosConfig();
       const postData = { postId: id, content: comment };
       const response = await axios.post<any>(
-        "http://localhost:3000/comments/create",
+        "https://social-media-65nx.onrender.com/comments/create",
         postData,
         config
       );
@@ -116,7 +116,7 @@ export const reactionPost = createAsyncThunk<any, { postId: any; type: any }>(
       const config: AxiosRequestConfig = generateAxiosConfig();
       const postData = { postId: id, type: type };
       const response = await axios.post<any>(
-        "http://localhost:3000/posts/reaction",
+        "https://social-media-65nx.onrender.com/posts/reaction",
         postData,
         config
       );
@@ -135,7 +135,7 @@ export const sendMail = createAsyncThunk<any, { id: any; }>(
       const config: AxiosRequestConfig = generateAxiosConfig();
       const postData = { id: id };
       const response = await axios.post<any>(
-        "http://localhost:3000/users/send-email",
+        "https://social-media-65nx.onrender.com/users/send-email",
         postData,
         config
       );

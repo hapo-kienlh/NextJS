@@ -26,15 +26,9 @@ function FileRegister(props: any) {
   const handleCreateUser = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/users/create/from-csv",
+        "https://social-media-65nx.onrender.com/users/create/from-csv",
         {
           file: file,
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            token: localStorage.getItem("token"),
-          },
         }
       );
       if (response.data.status === 200) {
