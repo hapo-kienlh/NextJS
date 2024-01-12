@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Container, Typography } from "@mui/material";
 import axios from "axios";
 import LoginModal from "../../components/LoginModal";
+import Head from "next/head";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -38,6 +39,10 @@ function Login() {
   };
 
   return (
+    <>
+      <Head>
+        <title>Login</title>
+      </Head>
       <Container sx={{ width: "40%" }}>
         <Box>
           <Typography sx={{ textAlign: "center" }} variant="h5" color="initial">
@@ -82,6 +87,7 @@ function Login() {
           />
         </Box>
       </Container>
+    </>
   );
 }
 

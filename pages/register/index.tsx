@@ -2,6 +2,7 @@ import { AppBar, Box, Container, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
 import FormRegister from "../../components/FormRegister";
 import FileRegister from "../../components/FileRegister";
+import Head from "next/head";
 
 function Register() {
   const [tabValue, setTabValue] = useState(0);
@@ -11,6 +12,9 @@ function Register() {
   };
   return (
     <>
+      <Head>
+        <title>Register</title>
+      </Head>
       <Box>
         <Typography
           sx={{ textAlign: "center", paddingBottom: 2 }}

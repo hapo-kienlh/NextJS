@@ -4,25 +4,44 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
-import { Avatar, Box, Button, Container, Input } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  Input,
+  Paper,
+} from "@mui/material";
 import { AppDispatch } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { getDataUser, uploadImage } from "../../redux/actions";
+import { getDataUser, getDataUsers, uploadImage } from "../../redux/actions";
+import Head from "next/head";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import { isFriend } from "../../config";
 
 function Me() {
   const dispatch: AppDispatch = useDispatch();
-  const { dataUser, isUploadImage, loading, error } = useSelector(
+  const { dataUser, isUploadImage, dataUsers, error } = useSelector(
     (state: any) => state
   );
   const [previewImage, setPreviewImage] = useState<any>();
   const fileInputRef = useRef<any>(null);
   const [file, setFile] = useState<any>();
 
+  const [change, setChange] = useState<any>(false);
+
   useEffect(() => {
     fileInputRef.current = document.getElementById("fileInput");
     dispatch(getDataUser());
-  }, [dispatch, isUploadImage]);
+    dispatch(getDataUsers());
+  }, [dispatch, isUploadImage, change]);
 
   useEffect(() => {
     deleteImagePreview();
@@ -61,8 +80,28 @@ function Me() {
     alert("Upload avatar");
   };
 
+  const handleConfirmAddFriend = async (idFriendConfirm: any) => {
+    const postData = { idFriendConfirm };
+    const response = await axios.post(
+      "http://localhost:3000/users/confirm/add-friend",
+      postData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          token: `${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    if (response.status == 201) {
+      setChange((prev: any) => !prev);
+    }
+  };
+
   return (
     <>
+      <Head>
+        <title>Profile</title>
+      </Head>
       <Box>
         {dataUser && (
           <Card
@@ -88,19 +127,19 @@ function Me() {
                 }}
               >
                 <Avatar
-                  src={dataUser.user?.avatar}
+                  src={dataUser?.user?.avatar}
                   style={{ width: 100, height: 100, marginBottom: 10 }}
                   onClick={handleAvatarClick}
                   sx={{ cursor: "pointer" }}
                 />
                 <Typography variant="body1" color="textPrimary">
-                  Username: <strong> {dataUser.user?.username}</strong>
+                  Username: <strong> {dataUser?.user?.username}</strong>
                 </Typography>
                 <Typography variant="body1" color="textPrimary">
-                  Email: <strong>{dataUser.user?.email}</strong>
+                  Email: <strong>{dataUser?.user?.email}</strong>
                 </Typography>
                 <Typography variant="body1" color="textPrimary">
-                  Posts: <strong>{dataUser.user?.posts.length}</strong>
+                  Posts: <strong>{dataUser?.user?.posts.length}</strong>
                 </Typography>
               </Box>
             </CardContent>
@@ -142,13 +181,88 @@ function Me() {
                     color="primary"
                     fullWidth
                   >
-                    Register
+                    Up Load
                   </Button>
                 </Box>
               </Box>
             </Container>
           </Card>
         )}
+        <Box>
+          <Typography sx={{ padding: 2 }} variant="h5" color="initial">
+            <PeopleAltIcon fontSize="large" style={{ color: "#1877F2" }} />
+          </Typography>
+          {dataUser?.friends.map((item: any) => (
+            <Grid item key={item.friend.id} xs={12}>
+              <Paper elevation={3} sx={{ padding: 2, borderRadius: 2 }}>
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <Avatar
+                        src={item.friend.avatar}
+                        alt={item.friend.username}
+                      />
+                    }
+                    title={
+                      <Box sx={{ display: "flex" }}>
+                        <Box> {item.friend.username}</Box>
+                        <Box
+                          sx={{
+                            marginTop: "-2px",
+                            marginLeft: 1,
+                            cursor: "pointer",
+                          }}
+                        >
+                          <IndeterminateCheckBoxIcon style={{ color: "red" }} />
+                        </Box>
+                      </Box>
+                    }
+                  />
+                </Card>
+              </Paper>
+            </Grid>
+          ))}
+        </Box>
+
+        <Box sx={{ marginTop: 3 }}>
+          <Typography sx={{ padding: 2 }} variant="h5" color="initial">
+            <GroupAddIcon fontSize="large" style={{ color: "#1877F2" }} />
+          </Typography>
+          {dataUser?.confirm_friends.map((item: any) => (
+            <Grid item key={item.friend.id} xs={12}>
+              <Paper elevation={3} sx={{ padding: 2, borderRadius: 2 }}>
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <Avatar
+                        src={item.friend.avatar}
+                        alt={item.friend.username}
+                      />
+                    }
+                    title={
+                      <Box sx={{ display: "flex" }}>
+                        <Box> {item.friend.username}</Box>
+                        <Box
+                          sx={{
+                            marginTop: "-2px",
+                            marginLeft: 1,
+                            cursor: "pointer",
+                          }}
+                        >
+                          <CheckCircleIcon
+                            onClick={() => handleConfirmAddFriend(item.id)}
+                            style={{ color: "#1877F2" }}
+                          />
+                          <DeleteIcon style={{ color: "red" }} />
+                        </Box>
+                      </Box>
+                    }
+                  />
+                </Card>
+              </Paper>
+            </Grid>
+          ))}
+        </Box>
       </Box>
     </>
   );

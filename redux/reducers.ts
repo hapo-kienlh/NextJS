@@ -1,5 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createPost, getDataPosts, getDataUser, postComment, uploadImage } from "./actions";
+import {
+  createPost,
+  getDataPosts,
+  getDataUser,
+  getDataUsers,
+  postComment,
+  reactionPost,
+  sendMail,
+  uploadImage,
+} from "./actions";
 
 interface ApiState {
   dataPost: null | any;
@@ -7,8 +16,11 @@ interface ApiState {
   error: null | string;
   isCreatePost: null;
   dataUser: null;
+  dataUsers: null;
   isUploadImage: null;
   isComment: null;
+  isReaction: null;
+  isSendMail: null;
 }
 
 const initialState: ApiState = {
@@ -17,14 +29,21 @@ const initialState: ApiState = {
   loading: false,
   error: null,
   dataUser: null,
+  dataUsers: null,
   isUploadImage: null,
   isComment: null,
+  isReaction: null,
+  isSendMail: null,
 };
 
 const apiSlice = createSlice({
   name: "api",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSendMailState: (state) => {
+      state.isSendMail = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       /* Get Post */
@@ -69,6 +88,20 @@ const apiSlice = createSlice({
         state.error = action.error.message;
       })
 
+      /* Get All User */
+      .addCase(getDataUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getDataUsers.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.dataUsers = action.payload;
+      })
+      .addCase(getDataUsers.rejected, (state: any, action: any) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
       /* Upload Image User */
       .addCase(uploadImage.pending, (state) => {
         state.loading = true;
@@ -95,8 +128,37 @@ const apiSlice = createSlice({
       .addCase(postComment.rejected, (state: any, action: any) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+
+      /* Reaction Post */
+      .addCase(reactionPost.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(reactionPost.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.isReaction = action.payload;
+      })
+      .addCase(reactionPost.rejected, (state: any, action: any) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
+      /* Send mail */
+      .addCase(sendMail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(sendMail.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.isSendMail = action.payload;
+      })
+      .addCase(sendMail.rejected, (state: any, action: any) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
+export const { clearSendMailState } = apiSlice.actions;
 export default apiSlice.reducer;
